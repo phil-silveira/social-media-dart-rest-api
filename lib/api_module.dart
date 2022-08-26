@@ -3,7 +3,8 @@ import 'package:shelf_modular/shelf_modular.dart';
 import 'package:social_media_rest_api/core/services/database/postgres/postgres_database.dart';
 import 'package:social_media_rest_api/core/services/database/remote_database.dart';
 import 'package:social_media_rest_api/core/services/dot_env/dot_env_service.dart';
-import 'package:social_media_rest_api/post/post_resource.dart';
+
+import 'features/post/post_resource.dart';
 
 class ApiModule extends Module {
   @override

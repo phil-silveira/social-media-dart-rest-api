@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
+import 'package:social_media_rest_api/core/services/database/remote_database.dart';
 
 class PostResource extends Resource {
   static final path = "/posts";
@@ -15,8 +16,31 @@ class PostResource extends Resource {
       ];
 }
 
-FutureOr<Response> _getAllPosts() {
-  return Response(200, body: "Get all posts");
+FutureOr<Response> _getAllPosts(Injector injector) async {
+  final result = await injector
+      .get<RemoteDatabase>()
+      .query('SELECT * FROM "Post" ORDER BY "createdAt" DESC;');
+
+  final posts = result.map((i) => Post.fromJson(i['Post']!)).toList();
+
+  return Response(200, body: posts.toString());
+}
+
+class Post {
+  final int id;
+  final String text;
+  final DateTime createdAt;
+
+  Post({
+    required this.id,
+    required this.text,
+    required this.createdAt,
+  });
+
+  Post.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        text = json['text'],
+        createdAt = json['createdAt'];
 }
 
 FutureOr<Response> _getPostByID(ModularArguments args) {
