@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
@@ -21,26 +22,9 @@ FutureOr<Response> _getAllPosts(Injector injector) async {
       .get<RemoteDatabase>()
       .query('SELECT * FROM "Post" ORDER BY "createdAt" DESC;');
 
-  final posts = result.map((i) => Post.fromJson(i['Post']!)).toList();
+  final posts = result.map((i) => i['Post']).toList();
 
-  return Response(200, body: posts.toString());
-}
-
-class Post {
-  final int id;
-  final String text;
-  final DateTime createdAt;
-
-  Post({
-    required this.id,
-    required this.text,
-    required this.createdAt,
-  });
-
-  Post.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        text = json['text'],
-        createdAt = json['createdAt'];
+  return Response(200, body: jsonEncode(posts));
 }
 
 FutureOr<Response> _getPostByID(ModularArguments args) {
