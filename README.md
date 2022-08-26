@@ -1,2 +1,2 @@
-# social-media-dart-rest-api
-A social media like Rest API written in pure Dart
+A sample command-line application with an entrypoint in `bin/`, library code
+in `lib/`, and example unit test in `test/`.
