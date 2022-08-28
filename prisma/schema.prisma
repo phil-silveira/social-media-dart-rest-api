@@ -3,7 +3,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
+model post {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
     text      String
