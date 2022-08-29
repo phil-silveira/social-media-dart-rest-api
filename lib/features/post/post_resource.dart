@@ -11,9 +11,9 @@ class PostResource extends Resource {
   List<Route> get routes => [
         Route.get(path, _getAllPosts),
         Route.get("$path/:id", _getPostByID),
-        Route.post(path, _createPost),
-        Route.put("$path/:id", _updatePost),
         Route.delete("$path/:id", _deletePostByID),
+        Route.post(path, _createPost),
+        Route.put(path, _updatePost),
       ];
 }
 
@@ -52,26 +52,28 @@ FutureOr<Response> _createPost(
   ModularArguments args,
   Injector injector,
 ) async {
-  await injector.get<RemoteDatabase>().query(
-    'INSERT INTO public.post(text) VALUES (@text);',
+  final result = await injector.get<RemoteDatabase>().query(
+    'INSERT INTO public.post(text) VALUES (@text) RETURNING id, text;',
     variables: {'text': args.data['text']},
   );
-  return Response(201, body: "New post added");
+  final post = result.map((e) => e['post']).first;
+  return Response(201, body: jsonEncode(post));
 }
 
 FutureOr<Response> _updatePost(
   ModularArguments args,
   Injector injector,
 ) async {
-  await injector.get<RemoteDatabase>().query(
-    'UPDATE "post" SET text=@text WHERE id=@id;',
+  final result = await injector.get<RemoteDatabase>().query(
+    'UPDATE "post" SET text=@text WHERE id=@id RETURNING id, text;',
     variables: {
-      'id': args.params['id'],
+      'id': args.data['id'],
       'text': args.data['text'],
     },
   );
+  final post = result.map((e) => e['post']).first;
 
-  return Response(200, body: "Post updated");
+  return Response(200, body: jsonEncode(post));
 }
 
 FutureOr<Response> _deletePostByID(
