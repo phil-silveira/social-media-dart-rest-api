@@ -5,6 +5,7 @@ import 'package:social_media_rest_api/core/services/database/remote_database.dar
 import 'package:social_media_rest_api/core/services/dot_env/dot_env_service.dart';
 
 import 'features/post/post_resource.dart';
+import 'features/swagger/swagger_handler.dart';
 
 class ApiModule extends Module {
   @override
@@ -18,8 +19,8 @@ class ApiModule extends Module {
       ];
   @override
   List<ModularRoute> get routes => [
-        Route.get(
-            "/", () => Response(200, body: "Welcome to Social Media API")),
+        Route.get("/", () => Response.ok("Welcome to Social Media API")),
+        Route.get("/docs/**", swaggerHandler),
         Route.resource(PostResource()),
       ];
 }

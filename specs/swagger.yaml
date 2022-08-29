@@ -1,0 +1,54 @@
+openapi: 3.0.0
+
+info:
+  description: "Social Media API"
+  version: "1.0.10"
+  title: "Social Media API"
+
+servers:
+  - url: http://localhost:8080
+    description: Remote server
+
+tags:
+  - name: "user"
+    description: "Access to User"
+
+paths:
+  /posts:
+    get:
+      description: Get all posts
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+    post:
+      description: Create a new post
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+    put:
+      description: Update post data
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+
+components:
+  schemas:
+    post:
+      type: object
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
