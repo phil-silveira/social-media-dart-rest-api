@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:postgres/postgres.dart';
-import 'package:social_media_rest_api/core/services/database/remote_database.dart';
-import 'package:social_media_rest_api/core/services/dot_env/dot_env_service.dart';
+
+import '../../dot_env/dot_env_service.dart';
+import '../remote_database.dart';
 
 class PostgresDatabase implements RemoteDatabase {
   final completer = Completer<PostgreSQLConnection>();

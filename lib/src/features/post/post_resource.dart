@@ -3,7 +3,8 @@ import 'dart:convert';
 
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
-import 'package:social_media_rest_api/core/services/database/remote_database.dart';
+
+import '../../core/services/database/remote_database.dart';
 
 class PostResource extends Resource {
   static final path = "/posts";

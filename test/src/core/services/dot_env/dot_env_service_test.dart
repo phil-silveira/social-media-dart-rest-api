@@ -1,4 +1,4 @@
-import 'package:social_media_rest_api/core/services/dot_env/dot_env_service.dart';
+import 'package:social_media_rest_api/src/core/services/dot_env/dot_env_service.dart';
 import 'package:test/test.dart';
 
 void main() {

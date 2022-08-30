@@ -1,8 +1,9 @@
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_modular/shelf_modular.dart';
-import 'package:social_media_rest_api/api_module.dart';
-import 'package:social_media_rest_api/core/services/dot_env/dot_env_service.dart';
+import 'package:social_media_rest_api/api.dart';
+import 'package:social_media_rest_api/src/api_module.dart';
+import 'package:social_media_rest_api/src/core/services/dot_env/dot_env_service.dart';
 
 void main(List<String> arguments) async {
   DotEnvService.instance.load();
@@ -18,5 +19,8 @@ void main(List<String> arguments) async {
 
 final _modularHandler = Modular(
   module: ApiModule(),
-  middlewares: [logRequests()],
+  middlewares: [
+    logRequests(),
+    jsonResponse(),
+  ],
 );
