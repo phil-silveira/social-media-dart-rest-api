@@ -1,10 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 import 'package:shelf_modular/shelf_modular.dart';
 import 'package:social_media_rest_api/src/features/post/models/post_model.dart';
-import 'package:social_media_rest_api/src/features/post/repositories/post_repository.dart';
+
+import '../errors/errors.dart';
+import '../services/create_post_service.dart';
+import '../services/delete_post_by_id_service.dart';
+import '../services/get_all_posts_service.dart';
+import '../services/get_post_by_id_service.dart';
+import '../services/update_post_service.dart';
 
 class PostResource extends Resource {
   static final path = "/posts";
@@ -19,10 +26,10 @@ class PostResource extends Resource {
 }
 
 FutureOr<Response> _getAllPosts(Injector injector) async {
-  final posts = await injector.get<IPostRepository>().getAll();
+  final posts = await injector.get<GetAllPostService>()();
 
   return Response(
-    200,
+    HttpStatus.ok,
     body: jsonEncode(posts.map((e) => e.toMap()).toList()),
   );
 }
@@ -31,49 +38,71 @@ FutureOr<Response> _getPostByID(
   ModularArguments args,
   Injector injector,
 ) async {
-  final post = await injector.get<IPostRepository>().getByID(
-        int.parse(args.params['id']),
-      );
+  try {
+    final post = await injector.get<GetPostByIDService>()(
+      int.parse(args.params['id']),
+    );
 
-  if (post == null) return Response(404);
-
-  return Response(200, body: post.toJson());
+    return Response(
+      HttpStatus.ok,
+      body: post.toJson(),
+    );
+  } on PostNotFoundException {
+    return Response(HttpStatus.notFound);
+  }
 }
 
 FutureOr<Response> _createPost(
   ModularArguments args,
   Injector injector,
 ) async {
-  final post = await injector.get<IPostRepository>().create(
-        Post(
-          text: args.data['text'],
-        ),
-      );
+  final post = await injector.get<CreatePostService>()(
+    Post(
+      text: args.data['text'],
+    ),
+  );
 
-  return Response(201, body: post.toJson());
+  return Response(
+    HttpStatus.created,
+    body: post.toJson(),
+  );
 }
 
 FutureOr<Response> _updatePost(
   ModularArguments args,
   Injector injector,
 ) async {
-  final post = await injector.get<IPostRepository>().update(
-        Post(
-          id: args.data['id'],
-          text: args.data['text'],
-        ),
-      );
+  try {
+    final post = await injector.get<UpdatePostService>()(
+      Post(
+        id: args.data['id'],
+        text: args.data['text'],
+      ),
+    );
 
-  return Response(200, body: post.toJson());
+    return Response(
+      HttpStatus.ok,
+      body: post.toJson(),
+    );
+  } on PostNotFoundException {
+    return Response(HttpStatus.notFound);
+  }
 }
 
 FutureOr<Response> _deletePostByID(
   ModularArguments args,
   Injector injector,
 ) async {
-  await injector.get<IPostRepository>().deleteByID(
-        int.parse(args.params['id']),
-      );
+  try {
+    await injector.get<DeletePostByIDService>()(
+      int.parse(args.params['id']),
+    );
 
-  return Response(200, body: "Post ID (${args.params['id']}) deleted");
+    return Response(
+      HttpStatus.ok,
+      body: "Post ID (${args.params['id']}) deleted",
+    );
+  } on PostNotFoundException {
+    return Response(HttpStatus.notFound);
+  }
 }

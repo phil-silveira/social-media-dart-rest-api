@@ -7,3 +7,5 @@ build/
 
 # Custom
 .env
+pubspec.lock
+coverage
