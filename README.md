@@ -1,4 +1,9 @@
 # Social Media API
+![Dart badge](https://img.shields.io/badge/Dart-blue?logo=Dart)
+![PostgreSQL badge](https://img.shields.io/badge/PostgreSQL-202020?logo=postgresql)
+![Prisma badge](https://img.shields.io/badge/Prisma-202020?logo=Prisma)
+
+
 This Rest API performs all CRUD actions over the `Post` entity
 
 ## Requirements
